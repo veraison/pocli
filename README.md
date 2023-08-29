@@ -88,6 +88,24 @@ The following configuration options are supported:
   specified on the command line using `-H`/`--host` option.
 - **port**: the port on which the Veraison management service is listening.
   This can also be specified on the command line using `-p`/`--port` option.
+- **auth**: authentication method used by the Veraison management service. This
+  can be either `passthrough`/`none`, `basic`, or `oauth2`. If not specified
+  this defaults to `passthrough`. This can also be specified on the command
+  line using `-a`/`--auth` flag.
+- **username**: username for authenticating with the remote service. This is
+  only used if `auth` is set to `basic` or `oauth2`. This can also be specified
+  on the command line with `-U`/`--username`.
+- **password**: password for authenticating with the remote service. This is
+  only used if `auth` is set to `basic` or `oauth2`. This can also be specified
+  on the command line with `-P`/`--password`.
+- **client_id**: OAuth2 client ID. This is used only if `auth` is set to `oauth2`.
+  This can also be specified on the command line using `-C`/`--client-id`.
+- **client_secret**: OAuth2 client secret. This is used only if `auth` is set to
+  `oauth2`. This can also be specified on the command line using
+  `-S`/`--client-secret`.
+- **token_url**: OAuth2 token endpoint URL. This is used only if `auth` is set
+  to `oauth2`. This can also be specified on the command line using
+  `-T`/`--token-url`.
 
 See `misc/example-config.yaml` for an example configuration file.
 
