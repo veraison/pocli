@@ -8,8 +8,10 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/veraison/apiclient/auth"
 	"github.com/veraison/apiclient/management"
@@ -36,6 +38,10 @@ type Config struct {
 	Port int
 
 	Auth auth.IAuthenticator
+
+	Insecure bool
+	UseTLS bool
+	CertPaths []string
 }
 
 func Execute() {
@@ -50,12 +56,6 @@ func init() {
 		"the host running Veraison management service")
 	rootCmd.PersistentFlags().IntP("port", "p", 8088,
 		"the port on which Veraison management service is listening")
-
-	err := viper.BindPFlag("host", rootCmd.PersistentFlags().Lookup("host"))
-	cobra.CheckErr(err)
-	err = viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
-	cobra.CheckErr(err)
-
 	rootCmd.PersistentFlags().VarP(&authMethod, "auth", "a",
 		`authentication method, must be one of "none"/"passthrough", "basic", "oauth2"`)
 	rootCmd.PersistentFlags().StringP("client-id", "C", "", "OAuth2 client ID")
@@ -63,19 +63,21 @@ func init() {
 	rootCmd.PersistentFlags().StringP("token-url", "T", "", "token URL of the OAuth2 service")
 	rootCmd.PersistentFlags().StringP("username", "U", "", "service username")
 	rootCmd.PersistentFlags().StringP("password", "P", "", "service password")
+	rootCmd.PersistentFlags().BoolP(
+		"insecure", "i", false, "Use HTTPS but do not check certs (implies -s/--tls)",
+	)
+	rootCmd.PersistentFlags().BoolP(
+		"tls", "s", false, "Use HTTPS",
+	)
+	rootCmd.PersistentFlags().StringArrayP(
+		"ca-cert", "E", nil, "path to a CA cert that will be used in addition to system certs; may be specified multiple times",
+	)
 
-	err = viper.BindPFlag("auth", rootCmd.PersistentFlags().Lookup("auth"))
-	cobra.CheckErr(err)
-	err = viper.BindPFlag("client_id", rootCmd.PersistentFlags().Lookup("client-id"))
-	cobra.CheckErr(err)
-	err = viper.BindPFlag("client_secret", rootCmd.PersistentFlags().Lookup("client-secret"))
-	cobra.CheckErr(err)
-	err = viper.BindPFlag("username", rootCmd.PersistentFlags().Lookup("username"))
-	cobra.CheckErr(err)
-	err = viper.BindPFlag("password", rootCmd.PersistentFlags().Lookup("password"))
-	cobra.CheckErr(err)
-	err = viper.BindPFlag("token_url", rootCmd.PersistentFlags().Lookup("token-url"))
-	cobra.CheckErr(err)
+	rootCmd.PersistentFlags().VisitAll(func(flag *pflag.Flag) {
+		cfgName := strings.ReplaceAll(flag.Name, "-", "_")
+		err := viper.BindPFlag(cfgName, flag)
+		cobra.CheckErr(err)
+	})
 
 	rootCmd.AddCommand(activateCmd)
 	rootCmd.AddCommand(createCmd)
@@ -98,6 +100,9 @@ func initConfig() {
 
 	config.Host = v.GetString("host")
 	config.Port = v.GetInt("port")
+	config.Insecure = v.GetBool("insecure")
+	config.UseTLS = v.GetBool("tls")
+	config.CertPaths = v.GetStringSlice("ca_cert")
 
 	err = authMethod.Set(v.GetString("auth"))
 	cobra.CheckErr(err)
@@ -163,12 +168,27 @@ func readConfig(path string) (*viper.Viper, error) {
 func initService() {
 	var err error
 
+	scheme := "http"
+	if config.Insecure || config.UseTLS {
+		scheme = "https"
+	}
+
 	serviceURI := url.URL{
-		Scheme: "http",
+		Scheme: scheme,
 		Host:   fmt.Sprintf("%s:%d", config.Host, config.Port),
 		Path:   "/management/v1",
 	}
 
-	service, err = management.NewService(serviceURI.String(), config.Auth)
+	if config.Insecure {
+		service, err = management.NewInsecureTLSService(serviceURI.String(), config.Auth)
+	} else if config.UseTLS {
+		service, err = management.NewTLSService(
+			serviceURI.String(),
+			config.Auth,
+			config.CertPaths,
+		)
+	} else {
+		service, err = management.NewService(serviceURI.String(), config.Auth)
+	}
 	cobra.CheckErr(err)
 }
