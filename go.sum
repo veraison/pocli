@@ -183,8 +183,8 @@ github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcU
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=
 github.com/subosito/gotenv v1.4.2/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
-github.com/veraison/apiclient v0.2.0 h1:QELvZ+eEfzh9v0ORe9B2UTMpiA7aONHpZIfwSfcRR6s=
-github.com/veraison/apiclient v0.2.0/go.mod h1:LCXFZ3D/tJ3HLAOHUg8bnAKGvgTl53e1ntwdwjVbQ5A=
+github.com/veraison/apiclient v0.2.1-0.20240531100343-8a3a730a1e94 h1:0d7vTs3K9Y4bskTtI3pvkFE0HiSHc4vWA3M6Fc0lWRM=
+github.com/veraison/apiclient v0.2.1-0.20240531100343-8a3a730a1e94/go.mod h1:LCXFZ3D/tJ3HLAOHUg8bnAKGvgTl53e1ntwdwjVbQ5A=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
