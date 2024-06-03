@@ -173,5 +173,5 @@ verification service:
 be used to validate the certificate sent by the server. It is possible to
 disable server certificate validation with `-i`/`--insecure` flag (note that if
 this flag is used, `-s` flag is implied and does not need to be explicitly specified.
-specified). Alternatively, if the CA cert for the server is available but is
+Alternatively, if the CA cert for the server is available but is
 not installed in the system, it may be specified using `-E`/`--ca-cert` flag.
