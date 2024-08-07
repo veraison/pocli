@@ -7,7 +7,7 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.16.0
-	github.com/veraison/apiclient v0.2.1-0.20240531100343-8a3a730a1e94
+	github.com/veraison/apiclient v0.3.1-0.20240807160142-9141ad363e45
 )
 
 require (
