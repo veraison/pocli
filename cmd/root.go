@@ -54,7 +54,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "", "configuration file")
 	rootCmd.PersistentFlags().StringP("host", "H", "localhost",
 		"the host running Veraison management service")
-	rootCmd.PersistentFlags().IntP("port", "p", 8088,
+	rootCmd.PersistentFlags().IntP("port", "p", 10443,
 		"the port on which Veraison management service is listening")
 	rootCmd.PersistentFlags().VarP(&authMethod, "auth", "a",
 		`authentication method, must be one of "none"/"passthrough", "basic", "oauth2"`)
